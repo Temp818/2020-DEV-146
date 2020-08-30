@@ -49,6 +49,35 @@ class TicTacToe {
         return false
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun isDiagonalWin(): Boolean {
+        return isLeftTopStartDiagonalWin() || isRightTopStartDiagonalWin()
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun isLeftTopStartDiagonalWin(): Boolean {
+        val winningCell = board.getCell(0, 0)
+        for (row in board.indices) {
+            if (board.getCell(row, row) == Cell.EMPTY || board.getCell(row, row) != winningCell) {
+                return false
+            }
+        }
+        return true
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun isRightTopStartDiagonalWin(): Boolean {
+        val lastIndex = board.size - 1
+        val winningCell = board.getCell(0, lastIndex)
+        for (row in board.indices.reversed()) {
+            val column = lastIndex - row
+            if (board.getCell(row, column) == Cell.EMPTY || board.getCell(row, column) != winningCell) {
+                return false
+            }
+        }
+        return true
+    }
+
     companion object {
         const val BOARD_SIZE = 3
     }

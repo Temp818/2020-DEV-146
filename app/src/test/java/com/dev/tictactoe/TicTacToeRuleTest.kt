@@ -84,4 +84,70 @@ class TicTacToeRuleTest {
         val game = TicTacToe()
         assertThat(game.isHorizontalWin()).isFalse
     }
+
+    @Test
+    fun testIsLeftTopStartDiagonalWin() {
+        val game = TicTacToe()
+        game.board.setCell(0, 0, Player.X)
+        game.board.setCell(1, 1, Player.X)
+        game.board.setCell(2, 2, Player.X)
+        assertThat(game.isLeftTopStartDiagonalWin()).isTrue
+    }
+
+    @Test
+    fun testIsRightTopStartDiagonalWin() {
+        val game = TicTacToe()
+        game.board.setCell(0, 2, Player.X)
+        game.board.setCell(1, 1, Player.X)
+        game.board.setCell(2, 0, Player.X)
+        assertThat(game.isRightTopStartDiagonalWin()).isTrue
+    }
+
+    @Test
+    fun testIsNotLeftTopStartDiagonalWin() {
+        val game = TicTacToe()
+        game.board.setCell(0, 0, Player.X)
+        game.board.setCell(1, 1, Player.O)
+        game.board.setCell(2, 2, Player.X)
+        assertThat(game.isLeftTopStartDiagonalWin()).isFalse
+    }
+
+    @Test
+    fun testIsNotRightTopStartDiagonalWin() {
+        val game = TicTacToe()
+        game.board.setCell(0, 2, Player.X)
+        game.board.setCell(1, 1, Player.O)
+        game.board.setCell(2, 0, Player.X)
+        assertThat(game.isRightTopStartDiagonalWin()).isFalse
+    }
+
+    @Test
+    fun testIsNotLeftTopStartDiagonalWinWithEmptyCells() {
+        val game = TicTacToe()
+        assertThat(game.isLeftTopStartDiagonalWin()).isFalse
+    }
+
+    @Test
+    fun testIsNotRightTopStartDiagonalWinWithEmptyCells() {
+        val game = TicTacToe()
+        assertThat(game.isRightTopStartDiagonalWin()).isFalse
+    }
+
+    @Test
+    fun testIsDiagonalWin() {
+        val game = TicTacToe()
+        game.board.setCell(0, 2, Player.X)
+        game.board.setCell(1, 1, Player.X)
+        game.board.setCell(2, 0, Player.X)
+        assertThat(game.isDiagonalWin()).isTrue
+    }
+
+    @Test
+    fun testIsNotDiagonalWin() {
+        val game = TicTacToe()
+        game.board.setCell(0, 1, Player.X)
+        game.board.setCell(1, 1, Player.X)
+        game.board.setCell(2, 0, Player.X)
+        assertThat(game.isDiagonalWin()).isFalse
+    }
 }
