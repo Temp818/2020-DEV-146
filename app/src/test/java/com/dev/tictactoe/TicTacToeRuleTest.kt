@@ -54,4 +54,34 @@ class TicTacToeRuleTest {
         val game = TicTacToe()
         assertThat(game.isVerticalWin()).isFalse
     }
+
+    @Test
+    fun testIsHorizontalWin() {
+        var game = TicTacToe()
+        for (row in 0 until TicTacToe.BOARD_SIZE) {
+            game.board.setCell(row, 0, Player.X)
+            game.board.setCell(row, 1, Player.X)
+            game.board.setCell(row, 2, Player.X)
+            assertThat(game.isHorizontalWin()).isTrue
+            game = TicTacToe()
+        }
+    }
+
+    @Test
+    fun testIsNotHorizontalWin() {
+        var game = TicTacToe()
+        for (row in 0 until TicTacToe.BOARD_SIZE) {
+            game.board.setCell(row, 0, Player.X)
+            game.board.setCell(row, 1, Player.X)
+            game.board.setCell(row, 2, Player.O)
+            assertThat(game.isHorizontalWin()).isFalse
+            game = TicTacToe()
+        }
+    }
+
+    @Test
+    fun testIsNotHorizontalWinEmptyCells() {
+        val game = TicTacToe()
+        assertThat(game.isHorizontalWin()).isFalse
+    }
 }

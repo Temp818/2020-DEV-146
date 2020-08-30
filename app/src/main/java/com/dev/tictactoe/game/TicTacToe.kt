@@ -33,6 +33,22 @@ class TicTacToe {
         return false
     }
 
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun isHorizontalWin(): Boolean {
+        var winningCell: Cell
+        for (row in board.indices) {
+            winningCell = board.getCell(row, 0)
+            for (column in board.indices) {
+                if (board.getCell(row, column) != winningCell) {
+                    winningCell = Cell.EMPTY
+                    break
+                }
+            }
+            if (winningCell != Cell.EMPTY) return true
+        }
+        return false
+    }
+
     companion object {
         const val BOARD_SIZE = 3
     }
