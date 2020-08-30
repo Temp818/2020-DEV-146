@@ -24,4 +24,34 @@ class TicTacToeRuleTest {
             game.goToNextRound()
         }
     }
+
+    @Test
+    fun testIsVerticalWin() {
+        var game = TicTacToe()
+        for (column in 0 until TicTacToe.BOARD_SIZE) {
+            game.board.setCell(0, column, Player.X)
+            game.board.setCell(1, column, Player.X)
+            game.board.setCell(2, column, Player.X)
+            assertThat(game.isVerticalWin()).isTrue
+            game = TicTacToe()
+        }
+    }
+
+    @Test
+    fun testIsNotVerticalWin() {
+        var game = TicTacToe()
+        for (column in 0 until TicTacToe.BOARD_SIZE) {
+            game.board.setCell(0, column, Player.O)
+            game.board.setCell(1, column, Player.X)
+            game.board.setCell(2, column, Player.X)
+            assertThat(game.isVerticalWin()).isFalse
+            game = TicTacToe()
+        }
+    }
+
+    @Test
+    fun testIsNotVerticalWinWithEmptyCells() {
+        val game = TicTacToe()
+        assertThat(game.isVerticalWin()).isFalse
+    }
 }
