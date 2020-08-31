@@ -3,12 +3,21 @@ package com.dev.tictactoe.game
 import androidx.annotation.VisibleForTesting
 import com.dev.tictactoe.board.Board
 import com.dev.tictactoe.board.Cell
+import com.dev.tictactoe.exception.IllegalMoveException
 import com.dev.tictactoe.player.Player
 
 class TicTacToe {
 
     var currentPlayer: Player = Player.X
     val board = Board(BOARD_SIZE)
+
+    fun updateBoard(row: Int, column: Int) {
+        if (board.getCell(row, column) == Cell.EMPTY) {
+            board.setCell(row, column, currentPlayer)
+        } else {
+            throw IllegalMoveException(Throwable("Illegal move"))
+        }
+    }
 
     fun goToNextRound() {
         currentPlayer = when (currentPlayer) {
@@ -71,7 +80,11 @@ class TicTacToe {
         val winningCell = board.getCell(0, lastIndex)
         for (row in board.indices.reversed()) {
             val column = lastIndex - row
-            if (board.getCell(row, column) == Cell.EMPTY || board.getCell(row, column) != winningCell) {
+            if (board.getCell(row, column) == Cell.EMPTY || board.getCell(
+                    row,
+                    column
+                ) != winningCell
+            ) {
                 return false
             }
         }

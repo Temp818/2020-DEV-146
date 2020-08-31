@@ -1,5 +1,7 @@
 package com.dev.tictactoe
 
+import com.dev.tictactoe.board.Cell
+import com.dev.tictactoe.exception.IllegalMoveException
 import com.dev.tictactoe.game.TicTacToe
 import com.dev.tictactoe.player.Player
 import org.assertj.core.api.Assertions.assertThat
@@ -149,5 +151,20 @@ class TicTacToeRuleTest {
         game.board.setCell(1, 1, Player.X)
         game.board.setCell(2, 0, Player.X)
         assertThat(game.isDiagonalWin()).isFalse
+    }
+
+    @Test(expected = IllegalMoveException::class)
+    fun testTryToPlayAlreadyPlayedPosition() {
+        val game = TicTacToe()
+        game.updateBoard(0, 0)
+        game.updateBoard(0, 0)
+    }
+
+    @Test
+    fun testUpdateBoard() {
+        val game = TicTacToe()
+        assertThat(game.board.board[0][0]).isEqualTo(Cell.EMPTY)
+        game.updateBoard(0, 0)
+        assertThat(game.board.board[0][0]).isEqualTo(Cell.X)
     }
 }
