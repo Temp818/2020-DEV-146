@@ -6,6 +6,8 @@ class Board(val size: Int) {
     val board = Array(size) { Array(size, init = { Cell.EMPTY }) }
     val indices: IntRange
         get() = board.indices
+    val isFullyFill: Boolean
+        get() = !board.flatten().contains(Cell.EMPTY)
 
     fun getCell(row: Int, column: Int) = board[row][column]
 

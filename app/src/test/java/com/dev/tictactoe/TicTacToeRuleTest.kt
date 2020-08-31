@@ -2,6 +2,7 @@ package com.dev.tictactoe
 
 import com.dev.tictactoe.board.Cell
 import com.dev.tictactoe.exception.IllegalMoveException
+import com.dev.tictactoe.game.GameState
 import com.dev.tictactoe.game.TicTacToe
 import com.dev.tictactoe.player.Player
 import org.assertj.core.api.Assertions.assertThat
@@ -166,5 +167,44 @@ class TicTacToeRuleTest {
         assertThat(game.board.board[0][0]).isEqualTo(Cell.EMPTY)
         game.updateBoard(0, 0)
         assertThat(game.board.board[0][0]).isEqualTo(Cell.X)
+    }
+
+    @Test
+    fun testDrawGame() {
+        val game = TicTacToe()
+        game.board.setCell(0, 0, Player.O)
+        game.board.setCell(0, 1, Player.X)
+        game.board.setCell(0, 2, Player.O)
+
+        game.board.setCell(1, 0, Player.X)
+        game.board.setCell(1, 1, Player.X)
+        game.board.setCell(1, 2, Player.O)
+
+        game.board.setCell(2, 0, Player.O)
+        game.board.setCell(2, 1, Player.O)
+        game.board.setCell(2, 2, Player.X)
+
+        assertThat(game.getGameState()).isEqualTo(GameState.Draw)
+    }
+
+    @Test
+    fun testWinGame() {
+        val game = TicTacToe()
+        game.board.setCell(0, 0, Player.X)
+        game.board.setCell(0, 1, Player.X)
+        game.board.setCell(0, 2, Player.X)
+
+        assertThat(game.getGameState()).isInstanceOf(GameState.Win::class.java)
+        assertThat((game.getGameState() as GameState.Win).winner).isEqualTo(Player.X)
+    }
+
+    @Test
+    fun testPlayingGame() {
+        val game = TicTacToe()
+        game.board.setCell(0, 0, Player.X)
+        game.board.setCell(0, 1, Player.O)
+        game.board.setCell(0, 2, Player.X)
+
+        assertThat(game.getGameState()).isEqualTo(GameState.Playing)
     }
 }

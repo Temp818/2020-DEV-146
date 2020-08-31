@@ -25,4 +25,16 @@ class BoardTest {
         board.setCell(1, 1, Player.X)
         assertThat(board.getCell(1, 1)).isEqualTo(Cell.X)
     }
+
+    @Test
+    fun testIsFullyFill() {
+        val board = Board(3)
+        assertThat(board.isFullyFill).isFalse
+        for(row in 0 until 3) {
+            for(column in 0 until 3) {
+                board.setCell(row,column, Player.X)
+            }
+        }
+        assertThat(board.isFullyFill).isTrue
+    }
 }

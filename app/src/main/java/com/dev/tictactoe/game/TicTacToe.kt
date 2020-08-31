@@ -26,6 +26,17 @@ class TicTacToe {
         }
     }
 
+    fun getGameState(): GameState {
+        val hasWinner = isVerticalWin() || isHorizontalWin() || isDiagonalWin()
+        if (hasWinner) {
+            return GameState.Win(currentPlayer)
+        }
+        if (board.isFullyFill) {
+            return GameState.Draw
+        }
+        return GameState.Playing
+    }
+
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun isVerticalWin(): Boolean {
         var winningCell: Cell
