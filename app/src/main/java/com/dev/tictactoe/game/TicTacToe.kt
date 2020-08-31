@@ -16,7 +16,7 @@ class TicTacToe {
             board.setCell(row, column, currentPlayer)
             return board
         } else {
-            throw IllegalMoveException(Throwable("Illegal move"))
+            throw IllegalMoveException()
         }
     }
 

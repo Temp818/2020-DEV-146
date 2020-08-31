@@ -100,4 +100,76 @@ class TicTacToeActivityTest {
             )
         )
     }
+
+    @Test
+    fun testCellNotUpdatedWhenAlreadyPlayed() {
+        onView(withId(R.id.rvBoard)).perform(
+            scrollToPosition<RecyclerView.ViewHolder>(0),
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        onView(withId(R.id.rvBoard)).check(
+            matches(
+                atPosition(
+                    0,
+                    allOf(
+                        withId(R.id.buttonCell),
+                        withText(Cell.X.value),
+                        isDisplayed()
+                    )
+                )
+            )
+        )
+
+        onView(withId(R.id.rvBoard)).perform(
+            scrollToPosition<RecyclerView.ViewHolder>(0),
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        onView(withId(R.id.rvBoard)).check(
+            matches(
+                atPosition(
+                    0,
+                    allOf(
+                        withId(R.id.buttonCell),
+                        withText(Cell.X.value),
+                        isDisplayed()
+                    )
+                )
+            )
+        )
+    }
+
+    @Test
+    fun testSnackBarDisplayedWhenIllegalMove() {
+        onView(withId(R.id.rvBoard)).perform(
+            scrollToPosition<RecyclerView.ViewHolder>(0),
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        onView(withId(R.id.rvBoard)).perform(
+            scrollToPosition<RecyclerView.ViewHolder>(0),
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        onView(
+            allOf(
+                withId(com.google.android.material.R.id.snackbar_text),
+                withText(R.string.illegal_move)
+            )
+        )
+            .check(matches(isDisplayed()))
+    }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dev.tictactoe.board.Board
+import com.dev.tictactoe.exception.IllegalMoveException
 import com.dev.tictactoe.game.TicTacToe
 
 class TicTacToeViewModel : ViewModel() {
@@ -13,11 +14,19 @@ class TicTacToeViewModel : ViewModel() {
     val board: LiveData<Board>
         get() = _board
 
+    private var _error = MutableLiveData<IllegalMoveException>()
+    val error: LiveData<IllegalMoveException>
+        get() = _error
+
     private var game: TicTacToe = TicTacToe()
 
     fun play(row: Int, column: Int) {
-        _board.value = game.updateBoard(row, column)
-        game.goToNextRound()
+        try {
+            _board.value = game.updateBoard(row, column)
+            game.goToNextRound()
+        } catch (exception: IllegalMoveException) {
+            _error.value = exception
+        }
     }
 
     @VisibleForTesting

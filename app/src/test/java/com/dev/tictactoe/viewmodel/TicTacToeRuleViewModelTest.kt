@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.dev.tictactoe.board.Board
 import com.dev.tictactoe.board.Cell
+import com.dev.tictactoe.exception.IllegalMoveException
 import com.dev.tictactoe.game.TicTacToe
 import com.dev.tictactoe.player.Player
 import com.nhaarman.mockito_kotlin.*
@@ -46,5 +47,24 @@ class TicTacToeRuleViewModelTest {
         verify(game).goToNextRound()
 
         assertThat(boardCaptor.firstValue.board[0][0]).isEqualTo(Cell.O)
+    }
+
+    @Test
+    fun testIllegalMove() {
+        whenever(game.updateBoard(0, 0)).thenThrow(IllegalMoveException::class.java)
+
+        val boardCaptor: KArgumentCaptor<(Board)> = argumentCaptor()
+        val boardObserver = mock<Observer<Board>>()
+        val errorCaptor: KArgumentCaptor<(IllegalMoveException)> = argumentCaptor()
+        val errorObserver = mock<Observer<IllegalMoveException>>()
+
+        viewModel.board.observeForever(boardObserver)
+        viewModel.error.observeForever(errorObserver)
+
+        viewModel.play(0, 0)
+
+        verify(boardObserver, never()).onChanged(boardCaptor.capture())
+        verify(errorObserver).onChanged(errorCaptor.capture())
+        assertThat(errorCaptor.firstValue).isInstanceOf(IllegalMoveException::class.java)
     }
 }

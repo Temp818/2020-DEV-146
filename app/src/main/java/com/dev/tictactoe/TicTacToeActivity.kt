@@ -8,6 +8,7 @@ import com.dev.tictactoe.adapter.BoardAdapter
 import com.dev.tictactoe.databinding.ActivityTictactoeBinding
 import com.dev.tictactoe.game.TicTacToe
 import com.dev.tictactoe.viewmodel.TicTacToeViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class TicTacToeActivity : AppCompatActivity(), BoardAdapter.Listener {
 
@@ -25,8 +26,23 @@ class TicTacToeActivity : AppCompatActivity(), BoardAdapter.Listener {
 
         viewModel = ViewModelProvider(this).get(TicTacToeViewModel::class.java)
 
+        observeBoardUpdate(adapter)
+        observeError()
+    }
+
+    private fun observeBoardUpdate(adapter: BoardAdapter) {
         viewModel.board.observe(this, { board ->
             adapter.board = board
+        })
+    }
+
+    private fun observeError() {
+        viewModel.error.observe(this, {
+            Snackbar.make(
+                binding.rvBoard,
+                R.string.illegal_move,
+                Snackbar.LENGTH_SHORT
+            ).show()
         })
     }
 
