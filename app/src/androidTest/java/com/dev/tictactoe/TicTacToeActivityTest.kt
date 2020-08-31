@@ -36,6 +36,10 @@ class TicTacToeActivityTest {
 
     @Test
     fun testCellsAreInitializedEmpty() {
+        checkBoardIsEmpty()
+    }
+
+    private fun checkBoardIsEmpty() {
         for (position in 0 until boardSize) {
             onView(withId(R.id.rvBoard)).perform(
                 scrollToPosition<RecyclerView.ViewHolder>(
@@ -48,7 +52,7 @@ class TicTacToeActivityTest {
                         position,
                         allOf(
                             withId(R.id.buttonCell),
-                            withText(Cell.EMPTY.value),
+                            withText(""),
                             isDisplayed()
                         )
                     )
@@ -203,6 +207,13 @@ class TicTacToeActivityTest {
             )
         )
             .check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(android.R.id.button1),
+                withText(R.string.restart)
+            )
+        )
+            .check(matches(isDisplayed()))
     }
 
     @Test
@@ -237,6 +248,13 @@ class TicTacToeActivityTest {
             )
         )
             .check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(android.R.id.button1),
+                withText(R.string.restart)
+            )
+        )
+            .check(matches(isDisplayed()))
     }
 
     @Test
@@ -268,5 +286,46 @@ class TicTacToeActivityTest {
             )
         )
             .check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(android.R.id.button1),
+                withText(R.string.restart)
+            )
+        )
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testBoardIsEmptyAfterRestart() {
+        val playedPosition = arrayOf(0, 1, 2, 4, 5, 7)
+
+        playedPosition.forEachIndexed { index, element ->
+            onView(withId(R.id.rvBoard)).perform(
+                scrollToPosition<RecyclerView.ViewHolder>(element),
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    element,
+                    click()
+                )
+            )
+            //We don't check the last played position because the alert dialog comes in and rvBoard is not on main focus anymore
+            if (index != playedPosition.size - 1) {
+                onView(withId(R.id.rvBoard)).check(
+                    matches(
+                        atPosition(
+                            element,
+                            allOf(
+                                withId(R.id.buttonCell),
+                                withText(if (index % 2 == 0) Player.X.name else Player.O.name),
+                                isDisplayed()
+                            )
+                        )
+                    )
+                )
+            }
+        }
+
+        onView(withId(android.R.id.button1)).perform(click())
+
+        checkBoardIsEmpty()
     }
 }

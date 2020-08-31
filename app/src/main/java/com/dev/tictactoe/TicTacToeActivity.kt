@@ -70,6 +70,12 @@ class TicTacToeActivity : AppCompatActivity(), BoardAdapter.Listener {
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)
+            .setPositiveButton(
+                R.string.restart
+            ) { dialog, _ ->
+                viewModel.restart()
+                dialog?.dismiss()
+            }
             .setCancelable(false)
             .create()
             .show()

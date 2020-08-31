@@ -5,4 +5,5 @@
     <string name="draw_game_message">Nobody won</string>
     <string name="win_game_title">Victory</string>
     <string name="win_game_message">Player %s wins the game</string>
+    <string name="restart">Restart</string>
 </resources>

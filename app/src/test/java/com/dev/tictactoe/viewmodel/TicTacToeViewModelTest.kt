@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class TicTacToeRuleViewModelTest {
+class TicTacToeViewModelTest {
 
     private lateinit var viewModel: TicTacToeViewModel
     private lateinit var game: TicTacToe
@@ -112,5 +112,36 @@ class TicTacToeRuleViewModelTest {
         whenever(game.getGameState()).thenReturn(GameState.Win(Player.X))
         viewModel.play(0, 0)
         verify(game, never()).goToNextRound()
+    }
+
+    @Test
+    fun testRestart() {
+        viewModel.setGameForTesting(TicTacToe())
+        val previousGame = viewModel.getGameForTesting()
+
+        val gameStateCaptor: KArgumentCaptor<(GameState)> = argumentCaptor()
+        val gameStateObserver = mock<Observer<GameState>>()
+        viewModel.gameState.observeForever(gameStateObserver)
+
+        val boardCaptor: KArgumentCaptor<(Board)> = argumentCaptor()
+        val boardObserver = mock<Observer<Board>>()
+        viewModel.board.observeForever(boardObserver)
+
+        viewModel.restart()
+
+        val newGame = viewModel.getGameForTesting()
+
+        assertThat(previousGame).isNotEqualTo(newGame)
+
+        verify(boardObserver).onChanged(boardCaptor.capture())
+        for (row in viewModel.getGameForTesting().board.indices) {
+            for (column in viewModel.getGameForTesting().board.indices) {
+                assertThat(boardCaptor.firstValue.board[row][column]).isEqualTo(Cell.EMPTY)
+            }
+        }
+
+        verify(gameStateObserver).onChanged(gameStateCaptor.capture())
+        assertThat(gameStateCaptor.firstValue).isEqualTo(GameState.Playing)
+        assertThat(viewModel.getGameForTesting().getCurrentPlayerForTesting()).isEqualTo(Player.X)
     }
 }

@@ -103,6 +103,9 @@ class TicTacToe {
         return true
     }
 
+    @VisibleForTesting
+    fun getCurrentPlayerForTesting() = currentPlayer
+
     companion object {
         const val BOARD_SIZE = 3
     }

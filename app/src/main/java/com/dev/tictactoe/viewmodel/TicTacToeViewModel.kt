@@ -38,8 +38,17 @@ class TicTacToeViewModel : ViewModel() {
         }
     }
 
+    fun restart() {
+        game = TicTacToe()
+        _board.value = game.board
+        _gameState.value = GameState.Playing
+    }
+
     @VisibleForTesting
     fun setGameForTesting(mockGame: TicTacToe) {
         this.game = mockGame
     }
+
+    @VisibleForTesting
+    fun getGameForTesting() = game
 }
