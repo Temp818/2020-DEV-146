@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">TicTacToe</string>
     <string name="illegal_move">Illegal move</string>
+    <string name="draw_game_title">Draw game</string>
+    <string name="draw_game_message">Nobody won</string>
+    <string name="win_game_title">Victory</string>
+    <string name="win_game_message">Player %s wins the game</string>
 </resources>

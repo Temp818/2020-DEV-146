@@ -5,10 +5,10 @@ import androidx.lifecycle.Observer
 import com.dev.tictactoe.board.Board
 import com.dev.tictactoe.board.Cell
 import com.dev.tictactoe.exception.IllegalMoveException
+import com.dev.tictactoe.game.GameState
 import com.dev.tictactoe.game.TicTacToe
 import com.dev.tictactoe.player.Player
 import com.nhaarman.mockito_kotlin.*
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -35,6 +35,7 @@ class TicTacToeRuleViewModelTest {
         whenever(game.updateBoard(0, 0)).thenReturn(Board(TicTacToe.BOARD_SIZE).also {
             it.setCell(0, 0, Player.O)
         })
+        whenever(game.getGameState()).thenReturn(GameState.Playing)
         val boardCaptor: KArgumentCaptor<(Board)> = argumentCaptor()
         val observer = mock<Observer<Board>>()
 
@@ -67,5 +68,49 @@ class TicTacToeRuleViewModelTest {
         verify(game, never()).goToNextRound()
         verify(errorObserver).onChanged(errorCaptor.capture())
         assertThat(errorCaptor.firstValue).isInstanceOf(IllegalMoveException::class.java)
+    }
+
+    @Test
+    fun testGameStateUpdated() {
+        val gameStateCaptor: KArgumentCaptor<(GameState)> = argumentCaptor()
+        val gameStateObserver = mock<Observer<GameState>>()
+        viewModel.gameState.observeForever(gameStateObserver)
+
+        whenever(game.getGameState()).thenReturn(GameState.Playing)
+        viewModel.play(0, 0)
+
+        whenever(game.getGameState()).thenReturn(GameState.Draw)
+        viewModel.play(0, 0)
+
+        whenever(game.getGameState()).thenReturn(GameState.Win(Player.O))
+        viewModel.play(0, 0)
+
+        verify(game, times(3)).getGameState()
+        verify(gameStateObserver, times(3)).onChanged(gameStateCaptor.capture())
+        assertThat(gameStateCaptor.firstValue).isEqualTo(GameState.Playing)
+        assertThat(gameStateCaptor.secondValue).isEqualTo(GameState.Draw)
+        assertThat(gameStateCaptor.thirdValue).isInstanceOf(GameState.Win::class.java)
+        assertThat((gameStateCaptor.thirdValue as GameState.Win).winner).isEqualTo(Player.O)
+    }
+
+    @Test
+    fun testGoToNextRoundOnlyIfNotEndGame() {
+        whenever(game.getGameState()).thenReturn(GameState.Playing)
+        viewModel.play(0, 0)
+        verify(game).goToNextRound()
+    }
+
+    @Test
+    fun testNotGoToNextRoundIfDraw() {
+        whenever(game.getGameState()).thenReturn(GameState.Draw)
+        viewModel.play(0, 0)
+        verify(game, never()).goToNextRound()
+    }
+
+    @Test
+    fun testNotGoToNextRoundIfWin() {
+        whenever(game.getGameState()).thenReturn(GameState.Win(Player.X))
+        viewModel.play(0, 0)
+        verify(game, never()).goToNextRound()
     }
 }

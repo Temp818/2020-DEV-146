@@ -11,6 +11,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dev.tictactoe.board.Cell
 import com.dev.tictactoe.game.TicTacToe
+import com.dev.tictactoe.player.Player
 import com.dev.tictactoe.util.atPosition
 import com.dev.tictactoe.util.withItemCount
 import org.hamcrest.Matchers.allOf
@@ -168,6 +169,102 @@ class TicTacToeActivityTest {
             allOf(
                 withId(com.google.android.material.R.id.snackbar_text),
                 withText(R.string.illegal_move)
+            )
+        )
+            .check(matches(isDisplayed()))
+    }
+
+
+    @Test
+    fun testAlertDialogDisplayedWhenDraw() {
+        activityRule.scenario.onActivity { activity ->
+            activity.getViewModelForTesting().play(0, 0)
+            activity.getViewModelForTesting().play(0, 1)
+            activity.getViewModelForTesting().play(0, 2)
+            activity.getViewModelForTesting().play(1, 1)
+            activity.getViewModelForTesting().play(1, 0)
+            activity.getViewModelForTesting().play(1, 2)
+            activity.getViewModelForTesting().play(2, 1)
+            activity.getViewModelForTesting().play(2, 0)
+            activity.getViewModelForTesting().play(2, 2)
+        }
+
+        onView(
+            allOf(
+                withId(com.google.android.material.R.id.alertTitle),
+                withText(R.string.draw_game_title)
+            )
+        )
+            .check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(android.R.id.message),
+                withText(R.string.draw_game_message)
+            )
+        )
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlertDialogDisplayWhenPlayerXWins() {
+        var ticTacToeActivity: TicTacToeActivity? = null
+        activityRule.scenario.onActivity { activity ->
+            ticTacToeActivity = activity
+            activity.getViewModelForTesting().play(0, 0)
+            activity.getViewModelForTesting().play(0, 1)
+            activity.getViewModelForTesting().play(0, 2)
+            activity.getViewModelForTesting().play(1, 0)
+            activity.getViewModelForTesting().play(1, 1)
+            activity.getViewModelForTesting().play(1, 2)
+            activity.getViewModelForTesting().play(2, 0)
+            activity.getViewModelForTesting().play(2, 1)
+            activity.getViewModelForTesting().play(2, 2)
+        }
+
+        onView(
+            allOf(
+                withId(com.google.android.material.R.id.alertTitle),
+                withText(R.string.win_game_title)
+            )
+        )
+            .check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(android.R.id.message),
+                withText(
+                    ticTacToeActivity!!.getString(R.string.win_game_message).format(Player.X.name)
+                )
+            )
+        )
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlertDialogDisplayWhenPlayerOWins() {
+        var ticTacToeActivity: TicTacToeActivity? = null
+        activityRule.scenario.onActivity { activity ->
+            ticTacToeActivity = activity
+            activity.getViewModelForTesting().play(0, 0)
+            activity.getViewModelForTesting().play(0, 1)
+            activity.getViewModelForTesting().play(0, 2)
+            activity.getViewModelForTesting().play(1, 1)
+            activity.getViewModelForTesting().play(1, 2)
+            activity.getViewModelForTesting().play(2, 1)
+        }
+
+        onView(
+            allOf(
+                withId(com.google.android.material.R.id.alertTitle),
+                withText(R.string.win_game_title)
+            )
+        )
+            .check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(android.R.id.message),
+                withText(
+                    ticTacToeActivity!!.getString(R.string.win_game_message).format(Player.O.name)
+                )
             )
         )
             .check(matches(isDisplayed()))
