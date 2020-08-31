@@ -35,9 +35,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.assertj:assertj-core:3.8.0'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

@@ -9,7 +9,7 @@ import com.dev.tictactoe.R
 import com.dev.tictactoe.board.Board
 import com.dev.tictactoe.game.TicTacToe
 
-class BoardAdapter() :
+class BoardAdapter(private val listener: Listener) :
     RecyclerView.Adapter<BoardAdapter.ViewHolder>() {
 
     var board: Board = Board(TicTacToe.BOARD_SIZE)
@@ -28,18 +28,33 @@ class BoardAdapter() :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val row: Int = position / TicTacToe.BOARD_SIZE
         val column: Int = position % TicTacToe.BOARD_SIZE
-        holder.bind(row, column, board)
+        holder.bind(listener, row, column, board)
     }
 
-    class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         private var row: Int = 0
         private var column: Int = 0
+        private var listener: Listener? = null
         private val button: Button = itemView.findViewById(R.id.buttonCell)
 
-        fun bind(row: Int, column: Int, board: Board) {
+        init {
+            button.setOnClickListener(this)
+        }
+
+        fun bind(listener: Listener, row: Int, column: Int, board: Board) {
+            this.listener = listener
             this.row = row
             this.column = column
             button.text = board.getCell(row, column).value
         }
+
+        override fun onClick(view: View?) {
+            listener?.onCellClick(row, column)
+        }
+    }
+
+    interface Listener {
+        fun onCellClick(row: Int, column: Int)
     }
 }

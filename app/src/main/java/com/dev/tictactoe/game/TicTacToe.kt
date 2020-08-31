@@ -11,9 +11,10 @@ class TicTacToe {
     var currentPlayer: Player = Player.X
     val board = Board(BOARD_SIZE)
 
-    fun updateBoard(row: Int, column: Int) {
+    fun updateBoard(row: Int, column: Int): Board {
         if (board.getCell(row, column) == Cell.EMPTY) {
             board.setCell(row, column, currentPlayer)
+            return board
         } else {
             throw IllegalMoveException(Throwable("Illegal move"))
         }
