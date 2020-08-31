@@ -64,6 +64,7 @@ class TicTacToeRuleViewModelTest {
         viewModel.play(0, 0)
 
         verify(boardObserver, never()).onChanged(boardCaptor.capture())
+        verify(game, never()).goToNextRound()
         verify(errorObserver).onChanged(errorCaptor.capture())
         assertThat(errorCaptor.firstValue).isInstanceOf(IllegalMoveException::class.java)
     }
